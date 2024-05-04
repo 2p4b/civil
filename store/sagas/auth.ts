@@ -16,12 +16,21 @@ function* passwordLogin(action: Actions.PasswordLoginAction, ctx: Store.Context)
     });
     action.resolve.success(session);
     yield put(Actions.loggedIn(session));
-    //console.log(ctx.client, payload);
-    //ctx.client.auth.onAuthStateChange((event: string, session: any) => {
-        //if(event === SIGNED_IN){
-            //ctx.dispatch({type: "@@SIGNED_IN", payload: session});
-        //}
-    //});
+}
+
+function* signup(action: Actions.AuthSignupAction, ctx: Store.Context){
+    const session = yield Promise.resolve({
+        id: "xxx-xxx-xxx",
+        token: "xxx-xxx-xxx",
+        user: {
+            id: "xxx-xxx-xxx",
+            email: action.payload.email,
+            username: action.payload.username,
+            password: action.payload.password,
+        }
+    });
+    action.resolve.success(session);
+    yield put(Actions.loggedIn(session));
 }
 
 function* logout(action: Actions.LogoutAction, ctx: Store.Context){
@@ -32,6 +41,7 @@ function* logout(action: Actions.LogoutAction, ctx: Store.Context){
 
 export default [
     { effect: takeEvery, type: Actions.PASSWORD_LOGIN, handler: passwordLogin },
+    { effect: takeEvery, type: Actions.AUTH_SIGNUP, handler:  signup},
     { effect: takeEvery, type: Actions.LOGOUT, handler: logout },
 ];
 

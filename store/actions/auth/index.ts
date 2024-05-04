@@ -49,3 +49,12 @@ export type LoggedOutAction = Store.Action<LOGGED_OUT, LoggedOutPayload>;
 export function loggedOut(payload: LoggedOutPayload): LoggedOutAction {
     return createAction<LOGGED_OUT>(LOGGED_OUT, payload ?? {});
 }
+
+export const AUTH_SIGNUP = "AUTH_SIGNUP";
+export type AUTH_SIGNUP = typeof AUTH_SIGNUP;
+export interface AuthSignUpPayload {}
+export type AuthSignupAction = Store.Action<AUTH_SIGNUP, AuthSignUpPayload>;
+export function signup(payload: AuthSignUpPayload): AuthSignupAction {
+    return createIOAction<AUTH_SIGNUP, LoggedInPayload>(AUTH_SIGNUP, payload);
+}
+

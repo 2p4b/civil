@@ -1,10 +1,10 @@
 import React from 'react';
 import { StyleSheet, View } from 'react-native';
-import { ExternalLink } from '@/components/ExternalLink';
 import { Text, TextInput, Button } from '@/components';
 import { useSession } from '@/store/hooks';
+import LottieView from 'lottie-react-native';
 
-import Colors from '@/constants/Colors';
+const loginAnimation = require('@/assets/lottie/loggin_animation.json');
 
 interface ILayout {
     caption?: string;
@@ -26,6 +26,9 @@ export default function Layout({ caption="Welcome", subcaption="Pick up where yo
             </View>
             <View style={styles.main}>
                 {props.children}
+                <View style={styles.presentation}>
+                    <LottieView style={{width: "100%", height: 300}} source={loginAnimation} autoPlay loop />
+                </View>
             </View>
         </View>
     );
@@ -49,6 +52,8 @@ const styles = StyleSheet.create({
     subcaption: {
         fontSize: 24,
         fontWeight: 'normal',
+    },
+    presentation: {
     },
     main:{
         flex: 1,

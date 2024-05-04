@@ -3,7 +3,7 @@ import Layout from "./Layout";
 import * as WebBrowser from 'expo-web-browser';
 import { StyleSheet, View } from 'react-native';
 import { Link } from 'expo-router';
-import { Text, Button } from '@/components';
+import { Button } from '@/components';
 
 //import * as Google from 'expo-auth-session/providers/google';
 

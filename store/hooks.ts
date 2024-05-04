@@ -51,11 +51,18 @@ export function useSession() {
     }
 
 
+    async function signup(params) {
+        const action = Actions.Auth.signup(params);   
+        const auth = await dispatch(action);
+        return auth;
+    }
+
     return useMemo(() => {
         return {
             auth,
             user,
             logout,
+            signup,
             loginWithPassword,
         };
     }, [auth, user]);

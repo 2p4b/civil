@@ -1,5 +1,5 @@
 import React from 'react';
-import Layout from "./Layout";
+import Layout from "../Layout";
 import { StyleSheet, View } from 'react-native';
 import { Link } from 'expo-router';
 import { useSession } from '@/store/hooks';
@@ -7,8 +7,7 @@ import { Text, TextInput, Button } from '@/components';
 import { router } from 'expo-router';
 
 
-export default function Password() {
-    const animation = React.useRef(null);
+export default function PasswordLogin() {
     const session = useSession();
     const [loading, setLoading] = React.useState(false);
     const [username, onUsernameChange] = React.useState('');
@@ -39,6 +38,7 @@ export default function Password() {
                     value={username}
                     onChangeText={onUsernameChange}
                     placeholder="Username or Email"
+                    textContentType="username"
                 />
             </View>
             <View style={styles.field}>
@@ -46,6 +46,8 @@ export default function Password() {
                     value={password}
                     disabled={loading || session.auth.is_valid}
                     placeholder="Password"
+                    textContentType="password"
+                    secureTextEntry={true}
                     onChangeText={onPasswordChange}
                 />
             </View>
@@ -88,5 +90,6 @@ const styles = StyleSheet.create({
         paddingHorizontal: 6,
     }
 });
+
 
 
