@@ -10,6 +10,7 @@ import store from "@/store";
 import { useTheme } from "@/hooks"
 import { colors } from '@/constants/Colors';
 import { useColorScheme } from '@/components/useColorScheme';
+import { StripeProvider } from '@stripe/stripe-react-native';
 
 const client = {
     getUsers: async () => {
@@ -49,11 +50,16 @@ export function Main(){
 function RootLayout() {
     const colorScheme = useColorScheme();
     return (
-        <Theme.Context.Provider value={defaultTheme}>
-            <ThemeProvider value={colorScheme === 'dark' ? DarkTheme : DefaultTheme}>
-                <Main />
-            </ThemeProvider>
-        </Theme.Context.Provider>
+        <StripeProvider 
+            urlScheme={process.env.EXPO_PUBLIC_MECHANT_APP_URL} 
+            publishableKey={process.env.EXPO_PUBLIC_STRIPE_PUBLIC_KEY} 
+            mechantIdentifier={process.env.EXPO_PUBLIC_MECHANT_APP_NAME}>
+            <Theme.Context.Provider value={defaultTheme}>
+                <ThemeProvider value={colorScheme === 'dark' ? DarkTheme : DefaultTheme}>
+                    <Main />
+                </ThemeProvider>
+            </Theme.Context.Provider>
+        </StripeProvider>
     );
 }
 

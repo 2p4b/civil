@@ -2,6 +2,7 @@ import { Record } from "immutable";
 import app from "./app";
 import auth from "./auth";
 import users from "./users";
+import paid from "./paid";
 
 const INIT = "@@INIT";
 
@@ -9,12 +10,18 @@ const RootStates = {
     app: app.state,
     auth: auth.state,
     users: users.state,
+    subscriptions: paid.subscriptions.state,
+    plans: paid.plans.state,
+    features: paid.features.state,
 };
 
 const reducers = {
     app: createReducer(app.reducers, app.state),
     auth: createReducer(auth.reducers, auth.state),
     users: createReducer(users.reducers, users.state),
+    subscriptions: createReducer(paid.subscriptions.reducers, paid.subscriptions.state),
+    plans: createReducer(paid.plans.reducers, paid.plans.state),
+    features: createReducer(paid.features.reducers, paid.features.state),
 };
 
 interface IAction extends Store.Action{}

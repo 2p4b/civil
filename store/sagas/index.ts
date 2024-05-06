@@ -7,12 +7,13 @@ const watch = (store: any, { effect, type, handler }: any) =>
         }
         yield effect(type, wrapper);
     };
-
-
 export default function* main(store: any) {
     const watchers = ([
         require("./app").default,
         require("./auth").default,
+        require("./paid/plan").default,
+        require("./paid/feature").default,
+        require("./paid/subscription").default,
     ]).flat().map(watch.bind(null, store));
 
     const sagas = [...watchers].map(fork);

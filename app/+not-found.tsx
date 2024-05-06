@@ -7,8 +7,6 @@ import { usePathname } from 'expo-router';
 export default function NotFoundScreen() {
     const pathname = usePathname();
 
-    console.log('Pathname:', pathname);
-    
     return (
         <>
             <Stack.Screen options={{ title: 'Oops!' }} />

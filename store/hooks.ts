@@ -2,11 +2,78 @@ import { useMemo, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { User } from "./records";
 import Actions from "./actions";
+import { faker } from "@faker-js/faker";
+
+function makePlan(price, name){
+    return {
+        id: faker.random.uuid(),
+        price: price,
+        name: name,
+        billing: 'monthly',
+        variants: [],
+        lacks: [],
+        offers: [],
+        features: [],
+    }
+}
 
 const AnonUser = new User({});
 
+export function useSubscriptionFeature(id){
+    return {
+        id: id,
+        name: faker.lorem.words(),
+        description: faker.lorem.sentence(),
+    }
+}
+
+export function useSubscriptionPlans(){
+    const plans = useSelector(state => state.plans);
+    return plans.rows;
+}
+
+export function usePaidSubscriptions(id){
+}
+
+export function usePaidPlans(){
+    const plans = useSelector(state => state.plans);
+    return plans.rows;
+}
+
+export function usePaidPlan(id){
+    return useSelector(state => state.plans.find(id));
+}
+
+export function usePaidFeatures(ids){
+    const features = useSelector(state => state.features);
+    return useMemo(() => {
+        return features.rows
+    }, [ids, features.rows]);
+}
+
+export function usePaidFeature(id){
+    return useSelector(state => state.features.find(id));
+}
+
+export function usePaidSubscription(id){
+    return useSelector(state => state.subscriptions.find(id));
+}   
+
 export function useAuth() {
     return useSelector(state => state.auth);
+}
+
+export function useUserSubscription(){
+    const plans = usePaidPlans();
+    return {
+        services: plans,
+        unsubscribe(id) {
+            return Promise.reject("TODO");
+        },
+        subscribe(plan) {
+            return Promise.reject("TODO");
+        }
+    }
 }
 
 export function useApp() {

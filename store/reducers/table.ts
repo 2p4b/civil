@@ -65,9 +65,11 @@ export function create<Row extends Object, Tname = string>(row: Row, name: Tname
         }
 
         static hooks = {
+            add: (table: Table, { payload }: any) => table.put(payload.id, payload),
             put: (table: Table, { payload }: any) => table.put(payload.id, payload),
             drop: (table: Table, { payload }: any) => table.drop(payload.id),   
             patch: (table: Table, { payload }: any) => table.patch(payload.id, payload),
+            update: (table: Table, { payload }: any) => table.patch(payload.id, payload),
         }
 
     }

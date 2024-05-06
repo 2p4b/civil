@@ -1,4 +1,4 @@
-import { Record } from "immutable";
+import { Record, List } from "immutable";
 import { faker } from '@faker-js/faker';
 
 export class App extends Record({
@@ -20,4 +20,44 @@ export class User extends Record({
         return !Boolean(this.id.trim().length);
     }
 
+}
+
+export class SubscriptionFeature extends Record({
+    id: "",
+    name: "",
+    description: "",
+}) {
+}
+
+export class SubscriptionPlan extends Record({
+    id: "",
+    name: "",
+    description: "",
+    price: 0.0,
+    billing: "monthly",
+    is_published: false,
+    __lacks: List<string>(),
+    __offers: List<string>(),
+    __variants: List<string>(),
+    __features: List<string>(),
+}) {
+}
+
+export class AccountSubscription extends Record({
+    id: "",
+    account_id: "",
+    created_at: "",
+    plan_id: "",
+}) {
+}
+
+
+export class UserAccount extends Record({
+    id: "",
+    user_id: "",
+    active: false,
+    created_at: "",
+    updated_at: "",
+    __subscriptions: List<string>(),
+}) {
 }

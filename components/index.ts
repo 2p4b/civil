@@ -11,4 +11,5 @@ export { default as Document } from "./Document";
 export { default as ChatBubble } from "./ChatBubble";
 export { default as DocumentPicker } from "./DocumentPicker";
 export { default as ImagePicker } from "./ImagePicker";
+export { default as Subscription } from "./Subscription";
 

@@ -43,7 +43,7 @@ export default function Login() {
                 {!session.auth.is_valid && (
                     <Text style={styles.footer}>
                         Don't already have an account? 
-                        <Link style={styles.link} href="/register">Signup</Link>
+                        <Link style={styles.link} href="/subscriptions">Signup</Link>
                     </Text>
                 )}
             </View>
