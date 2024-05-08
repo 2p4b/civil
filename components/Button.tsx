@@ -9,8 +9,10 @@ interface IButton extends Pressable{
     elevation?: number;
 }
 
-export default function Button({elevation=2, disabled=false, ...props}: Pressable) {
+export default function Button({elevation=2, ...props}: Pressable) {
     const theme = useTheme();
+
+    const disabled = props.disabled ?? false;
 
     const bstyle = useMemo(() => {
         const themeStyle = { 
@@ -19,27 +21,27 @@ export default function Button({elevation=2, disabled=false, ...props}: Pressabl
             backgroundColor: theme.palette.primary.get(disabled ? theme.variant.disabled : theme.variant.active),
         }
         return [themeStyle, styles.button]
-    }, [theme]);
+    }, [theme, disabled]);
 
     const tstyle = useMemo(() => {
         const themeStyle = { 
-            color: theme.palette.text.get(theme.variant.text),
+            color: disabled ? theme.palette.primary.get(200) : "white",
         }
         return [themeStyle]
-    }, [theme]);
+    }, [theme, disabled]);
 
     const style = props.style ?? {};
 
     if(typeof props.children === 'string'){
         return (
-            <Pressable style={[bstyle, style.root]} onPress={props.onPress}>
+            <Pressable {...props} style={[bstyle, style.root]}>
                 <Text style={[tstyle, style.text]}>{props.children}</Text>
             </Pressable>
         );
     }
 
     return (
-        <Pressable style={[bstyle, style.root]} onPress={props.onPress}>
+        <Pressable {...props} style={[bstyle, style.root]}>
             {props.children}
         </Pressable>
     );

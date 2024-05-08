@@ -5,38 +5,37 @@ const SIGNED_IN = "SIGNED_IN";
 
 
 function* passwordLogin(action: Actions.PasswordLoginAction, ctx: Store.Context){
-    const session = yield Promise.resolve({
-        id: "xxx-xxx-xxx",
-        token: "xxx-xxx-xxx",
-        user: {
-            id: "xxx-xxx-xxx",
-            username: action.payload.username,
-            password: action.payload.password,
+    const email = action.payload.username;
+    const password = action.payload.password;
+    try {
+        const { data, error} = yield ctx.client.loginWithEmail({email, password});
+        if (error) {
+            action.resolve.error({data, error});
+        } else {
+            action.resolve.success(data);
+            yield put(Actions.loggedIn(data));
         }
-    });
-    action.resolve.success(session);
-    yield put(Actions.loggedIn(session));
+    }catch(e){
+        action.resolve.error(e);
+    }
 }
 
 function* signup(action: Actions.AuthSignupAction, ctx: Store.Context){
-    const session = yield Promise.resolve({
-        id: "xxx-xxx-xxx",
-        token: "xxx-xxx-xxx",
-        user: {
-            id: "xxx-xxx-xxx",
-            email: action.payload.email,
-            username: action.payload.username,
-            password: action.payload.password,
-        }
-    });
+    const email = action.payload.username;
+    const password = action.payload.password;
+    const session = ctx.client.registerWithEmail({email, password});
     action.resolve.success(session);
     yield put(Actions.loggedIn(session));
 }
 
 function* logout(action: Actions.LogoutAction, ctx: Store.Context){
-    const session = yield Promise.resolve({});
-    action.resolve.success(session);
-    yield put(Actions.loggedOut(session));
+    const { data, error } = ctx.client.logout();
+    if (error) {
+        action.resolve.error({data, error});
+    } else {
+        action.resolve.success(data);
+        yield put(Actions.loggedOut(data));
+    }
 }
 
 export default [

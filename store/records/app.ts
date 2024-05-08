@@ -1,6 +1,18 @@
 import { Record, List } from "immutable";
 import { faker } from '@faker-js/faker';
 
+export class ChatPage extends Record({
+    selected: List<string>(),
+    input: {},
+}, "chatspage") {
+    clearSelected() {
+        return this.set("selected", List<string>());
+    }
+    clearInput() {
+        return this.set("input", {});
+    }
+}
+
 export class App extends Record({
     path: "home",
     title: "Civil",

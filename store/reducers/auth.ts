@@ -3,13 +3,17 @@ import * as Actions from "../actions/auth";
 
 class AuthRecord extends Record({
     id: "",
-    token: "",
+    access_token: "",
+    expires_at: 0,
+    expires_in: 0,
+    refresh_token: "",
+    token_type: "",
     is_local: true,
     is_anonymous: true,
     timestamp: 0,
 }) {
     get is_valid() {
-        return Boolean(this.token.trim().length);
+        return Boolean(this.access_token.trim().length);
     }
 }
 
@@ -17,12 +21,12 @@ export const state = new AuthRecord({});
 
 export const reducers = {
     [Actions.LOGGED_IN]: (app: AuthRecord, action: Actions.LoggedInAction) => {
-        const session = action.payload;
-        return app.set("id", session.id)
-            .set("token", session.token)
-            .set("timestamp", Date.now())
-            .set("is_local", true)
-            .set("is_anonymous", false);
+        const { session } = action.payload;
+        return new AuthRecord({...session, 
+            id: session.user.id, 
+            is_anonymous: false,
+            timestamp: Date.now(),
+        })
     },
     [Actions.LOGGED_OUT]: (_app: AuthRecord, _action: Actions.LoggedOutAction) => {
         return new AuthRecord({});

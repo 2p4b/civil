@@ -22,6 +22,7 @@ const icons = {
 export default function Icon({name, size, color, style}: IIcon) {
     const theme = useTheme();
     const RIcon = icons[name] ?? icons["default"];
+    color = color ?? theme.palette.icon.get(theme.variant.icon);
     if(!RIcon) return null;
-    return <RIcon name={name} size={size} color={color} style={style} color={theme.mode === "light" ? "black" : "white"}/>
+    return <RIcon name={name} size={size} color={color} style={style} color={color}/>
 }

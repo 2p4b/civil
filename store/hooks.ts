@@ -2,6 +2,8 @@ import { useMemo, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { User } from "./records";
 import Actions from "./actions";
+import { tables } from "./reducers";
+import { StoreList, StoreValue } from "@/records";
 import { faker } from "@faker-js/faker";
 
 function makePlan(price, name){
@@ -18,6 +20,87 @@ function makePlan(price, name){
 }
 
 const AnonUser = new User({});
+
+const defaultStoreList = new StoreList();
+const defaultStoreValue = new StoreValue();
+
+export function useStoreList(name){
+    const table = "lists";
+    const dispatch = useDispatch();
+    const list = useSelector(state => state.tables.get(table).find(name)) ?? defaultStoreList;  
+    return useMemo(() => {
+        return {
+            data: list.data,
+            table: {
+                actions: tables.actions,
+            },
+            add(payload, meta={}) {
+                if(list.data.includes(payload)) {
+                    return true;
+                }
+                if( list === defaultStoreList) {
+                    const newlist = defaultStoreList.set("data", list.data.push(payload));
+                    const action = tables.actions.load(table, name, newlist, meta);
+                    return dispatch(action);
+                }
+                const updater = (old) => old.set("data", old.data.push(payload));
+                const action = tables.actions.update(table, name, updater, meta);
+                return dispatch(action);
+            },
+            remove(payload, meta={}) {
+                if(!list.data.includes(payload)) {
+                    return true;
+                }
+                if( list === defaultStoreList) {
+                    return true;
+                }
+
+                if(typeof payload === "function") {
+                    const updater = payload;
+                    const action = tables.actions.set(table, name, "data", updater, meta);
+                    return dispatch(action);
+                } else {
+                    const updater = (old) => old.set("data", old.data.filter(val => val !== payload));
+                    const action = tables.actions.update(table, name, updater, meta);
+                    return dispatch(action);
+                }
+            }
+        }
+    }, [list.data]);
+}
+
+export function useUserSchools(id){
+    return useSelector(state => {
+        return state.tables.schools;
+    });
+}
+
+export function useEntity(table, id){
+    const dispatch = useDispatch();
+    const data = useSelector(state => state.tables.get(table).find(id));
+    return useMemo(() => {
+        return {
+            data,
+            load(payload, meta={}) {
+                const action = tables.actions.load(table, id, payload, meta);
+                return dispatch(action);
+            },
+            update(payload, meta={}) {
+                const action = tables.actions.update(table, id, payload, meta);
+                return dispatch(action);
+            },
+            set(field, value, meta={}) {
+                const action = tables.actions.set(table, id, field, value, meta);
+                return dispatch(action);
+            },
+            drop(meta={}) {
+                const action = tables.actions.drop(table, id, meta);
+                return dispatch(action);
+            }
+        }
+    }, [data]);
+}
+
 
 export function useSubscriptionFeature(id){
     return {
@@ -108,7 +191,7 @@ export function useSession() {
     async function loginWithPassword(params) {
         const action = Actions.Auth.loginWithPassword(params);   
         const auth = await dispatch(action);
-        return 
+        return auth;
     }
 
     async function logout() {

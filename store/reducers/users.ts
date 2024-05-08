@@ -8,7 +8,9 @@ const UsersTable = create(User, "users");
 export const state = new UsersTable();
 
 export const reducers = {
-    [AuthActions.LOGGED_IN]: (users, action) => users.put(action.payload.user.id, action.payload.user),
+    [AuthActions.LOGGED_IN](users, action){
+        return users.put(action.payload.user.id, action.payload.user);
+    }
 };
 
 export default { state, reducers };

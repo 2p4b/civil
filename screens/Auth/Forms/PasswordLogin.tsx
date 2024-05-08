@@ -2,31 +2,40 @@ import React from 'react';
 import Layout from "../Layout";
 import { StyleSheet, View } from 'react-native';
 import { Link } from 'expo-router';
+import { useForm } from '@/hooks';
 import { useSession } from '@/store/hooks';
 import { Text, TextInput, Button } from '@/components';
 import { router } from 'expo-router';
+import z from "zod";
 
+const schema = z.object({
+    email: z.string().email(),
+    password: z.string().min(6),
+});
+
+const loginDefaults = {
+    email: process.env.EXPO_PUBLIC_DEV_LOGIN_EMAIL || "",
+    password: process.env.EXPO_PUBLIC_DEV_LOGIN_PASSWORD || ""
+}
 
 export default function PasswordLogin() {
+    const [form, {errors}] = useForm(schema, loginDefaults);
     const session = useSession();
     const [loading, setLoading] = React.useState(false);
-    const [username, onUsernameChange] = React.useState('');
-    const [password, onPasswordChange] = React.useState('');
 
     async function onLogin(){
-        if(username.length > 3 && password.length > 5 && loading === false){
+        const username = form.email.value; 
+        const password = form.password.value;
+        if(Object.values(errors).length === 0 && loading === false){
             try{
                 setLoading(true);
                 await session.loginWithPassword({username, password});
             }catch(e){
                 // Report the error to the user.
-                console.error('[Password] onLogin',e);
+                console.error('[PasswordLogin] onLogin', e);
 
             }
-            setTimeout(() => {
-                setLoading(_ => false);
-                router.push('/home')
-            }, 500);
+            setLoading(_ => false);
         }
     }
 
@@ -35,25 +44,25 @@ export default function PasswordLogin() {
             <View style={styles.field}>
                 <TextInput
                     disabled={loading || session.auth.is_valid}
-                    value={username}
-                    onChangeText={onUsernameChange}
+                    value={form.email.value}
+                    onChangeText={form.email.setValue}
                     placeholder="Username or Email"
                     textContentType="username"
                 />
             </View>
             <View style={styles.field}>
                 <TextInput
-                    value={password}
+                    value={form.password.value}
                     disabled={loading || session.auth.is_valid}
                     placeholder="Password"
                     textContentType="password"
                     secureTextEntry={true}
-                    onChangeText={onPasswordChange}
+                    onChangeText={form.password.setValue}
                 />
             </View>
             <View style={[styles.field, styles.action]}>
                 <Button 
-                    disabled={loading || session.auth.is_valid}
+                    disabled={loading || session.auth.is_valid || Object.values(errors).length > 0}
                     style={styles.button} onPress={onLogin}>
                     Sign In
                 </Button>

@@ -1,4 +1,5 @@
 import FontAwesome from '@expo/vector-icons/FontAwesome';
+import { StatusBar } from 'expo-status-bar';
 import { DarkTheme, DefaultTheme, ThemeProvider } from '@react-navigation/native';
 import { useFonts } from 'expo-font';
 import { Stack } from 'expo-router';
@@ -7,16 +8,12 @@ import { Provider } from 'react-redux';
 import { useEffect } from 'react';
 import Theme from '@/theme';
 import store from "@/store";
+import client from "@/client";
 import { useTheme } from "@/hooks"
+import { createClient } from '@supabase/supabase-js'
 import { colors } from '@/constants/Colors';
 import { useColorScheme } from '@/components/useColorScheme';
-import { StripeProvider } from '@stripe/stripe-react-native';
 
-const client = {
-    getUsers: async () => {
-        return await fetch('https://jsonplaceholder.typicode.com/users').then(res => res.json());
-    }
-}
 store.init({client});
 
 export {
@@ -40,26 +37,24 @@ export function Main(){
         backgroundColor: theme.palette.background.get(theme.variant.background),
     }
     return (
-        <Stack>
-            <Stack.Screen name="(auth)" options={{ headerShown: false, headerStyle}} />
-            <Stack.Screen name="home" options={{ headerShown: false, headerStyle}} />
-        </Stack>
+        <>
+            <StatusBar style={theme.is_dark? "light" : "dark"} />
+            <Stack>
+                <Stack.Screen name="(auth)" options={{ headerShown: false, headerStyle}} />
+                <Stack.Screen name="home" options={{ headerShown: false, headerStyle}} />
+            </Stack>
+        </>
     );
 }
 
 function RootLayout() {
     const colorScheme = useColorScheme();
     return (
-        <StripeProvider 
-            urlScheme={process.env.EXPO_PUBLIC_MECHANT_APP_URL} 
-            publishableKey={process.env.EXPO_PUBLIC_STRIPE_PUBLIC_KEY} 
-            mechantIdentifier={process.env.EXPO_PUBLIC_MECHANT_APP_NAME}>
-            <Theme.Context.Provider value={defaultTheme}>
-                <ThemeProvider value={colorScheme === 'dark' ? DarkTheme : DefaultTheme}>
-                    <Main />
-                </ThemeProvider>
-            </Theme.Context.Provider>
-        </StripeProvider>
+        <Theme.Context.Provider value={defaultTheme}>
+            <ThemeProvider value={colorScheme === 'dark' ? DarkTheme : DefaultTheme}>
+                <Main />
+            </ThemeProvider>
+        </Theme.Context.Provider>
     );
 }
 

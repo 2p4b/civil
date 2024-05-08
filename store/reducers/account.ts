@@ -3,7 +3,7 @@ import * as Actions from "../actions/account";
 import { create } from "./table";
 import { UserAccount } from "../records";
 
-const UserAcccountsTable = create(UserAccount, "user_accounts");
+const UserAccountsTable = create(UserAccount, "accounts");
 
 export const state = new UserAccountsTable();
 

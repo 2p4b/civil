@@ -19,16 +19,14 @@ function TabBarIcon(props: {
 export default function TabLayout() {
     const colorScheme = useColorScheme();
     const theme = useTheme();
+    const iconColor = theme.palette.icon.get(theme.variant.icon);
+    const backgroundColor = theme.palette.background.get(theme.variant.background);
 
     return (
         <Tabs
             screenOptions={{
-                tabBarStyle: {
-                    backgroundColor: theme.palette.background.get(theme.variant.background),
-                },
-                headerStyle: {
-                    backgroundColor: theme.palette.background.get(theme.variant.background),
-                },
+                tabBarStyle: {backgroundColor},
+                headerStyle: {backgroundColor},
                 tabBarShowLabel: false,
                 tabBarActiveTintColor: Colors[colorScheme ?? 'light'].tint,
                 // Disable the static render of the header on web
@@ -38,8 +36,7 @@ export default function TabLayout() {
             <Tabs.Screen
                 name="index"
                 options={{
-                    title: 'Tab One',
-                    tabBarIcon: ({ color }) => <TabBarIcon name="home" color={color} />,
+                    tabBarIcon: ({ color }) => <TabBarIcon name="home" color={iconColor} />,
                     headerRight: () => (
                         <Link href="/contact-us" asChild>
                             <Pressable>
@@ -47,7 +44,7 @@ export default function TabLayout() {
                                     <FontAwesome6
                                         name="message"
                                         size={25}
-                                        color={Colors[colorScheme ?? 'light'].text}
+                                        color={iconColor}
                                         style={{ marginRight: 15, opacity: pressed ? 0.5 : 1 }}
                                     />
                                 )}
@@ -59,8 +56,8 @@ export default function TabLayout() {
             <Tabs.Screen
                 name="profile"
                 options={{
-                    title: 'profile',
-                    tabBarIcon: ({ color }) => <TabBarIcon name="user" color={color} />,
+                    title: 'Profile',
+                    tabBarIcon: ({ color }) => <TabBarIcon name="user" color={iconColor} />,
                 }}
             />
         </Tabs>

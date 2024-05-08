@@ -1,12 +1,34 @@
 import { Record } from "immutable";
+import compose from "./table";
 import app from "./app";
 import auth from "./auth";
 import users from "./users";
+import account from "./account";
 import paid from "./paid";
+import { ChatPage } from "../records";
+import * as Campus from "@/records";
 
 const INIT = "@@INIT";
 
+
+export const tables = compose({
+    chats: ChatPage,
+    events: Campus.CampusEvent,
+    students: Campus.CampusStudent,
+    curriculum: Campus.CampusCurriculum,
+    courses: Campus.CampusCourse,
+    topics: Campus.CampusTopic,
+    cycles: Campus.CampusCycle,
+    terms: Campus.CampusTerm,
+    sessions: Campus.CampusSession,
+    members: Campus.CampusMember,
+    lists: Campus.StoreList,
+    values: Campus.StoreValue,
+});
+
 const RootStates = {
+    tables: tables.state,
+    account: account.state,
     app: app.state,
     auth: auth.state,
     users: users.state,
@@ -16,6 +38,7 @@ const RootStates = {
 };
 
 const reducers = {
+    account: createReducer(account.reducers, account.state),
     app: createReducer(app.reducers, app.state),
     auth: createReducer(auth.reducers, auth.state),
     users: createReducer(users.reducers, users.state),
@@ -81,6 +104,9 @@ function validatePartition(state: RootStateT, value: Store) {
 }
 
 export default function rootReducer(state = RootState, action: Store.Action) {
+    if(tables.test(action)){
+        return state.set("tables", tables.dispatch(state.tables, action));
+    }
     return state.withMutations((state) => {
         stores.forEach((partition: Store) => {
             validatePartition(state, partition);

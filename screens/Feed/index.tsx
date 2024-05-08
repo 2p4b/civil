@@ -1,6 +1,7 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import { StyleSheet } from 'react-native';
 import { Text, View, ListView } from '@/components';
+import client from "@/client";
 
 interface IScreen{
 }
@@ -12,6 +13,10 @@ function Card(props) {
 }
 
 export default function Feed(props: IScreen) {
+
+    React.useEffect(() => {
+        //client.listUserSchools().then(console.log).catch(console.error);
+    }, []);
 
     function renderCard(data, layout) {
         return <Card width={layout.width} height={layout.height/2}/>

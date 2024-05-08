@@ -1,4 +1,5 @@
 import React from 'react';
+import { router } from 'expo-router';
 import { StyleSheet, View } from 'react-native';
 import Layout from "./Layout";
 import { Link } from 'expo-router';
@@ -23,6 +24,12 @@ export default function Login() {
             setLoading(false);
         }
     }
+
+    React.useEffect(() => {
+        if(session.auth.is_valid){
+            router.push('/home')
+        }
+    }, [session.auth.is_valid]);
 
     return (
         <Layout>

@@ -1,17 +1,34 @@
-import { StyleSheet } from 'react-native';
+import React from 'react';
+import { StyleSheet, Button } from 'react-native';
 import { Stack } from 'expo-router';
 import { Text, View} from '@/components';
-import Feed from '@/screens/Feed';
+import { useStoreList } from '@/store/hooks';
+import z from "zod";
+
+const schema = z.object({
+    email: z.string().email(),
+    password: z.string().min(6),
+});
 
 export default function FeedScreen() {
+    const loading = useStoreList("loading");
+
+    function toggle(){
+        if(loading.data.includes("user.schools")){
+            loading.remove("user.schools");
+        } else {
+            loading.add("user.schools");
+        }
+    }
+    
     return (
         <View style={styles.container}>
             <Stack.Screen
                 options={{
-                    title: "Civil",
+                    title: "Campus",
                 }}
             />
-            <Feed/>
+            <Button title={loading.data.includes("user.schools") ? "drop" : "load" } onPress={toggle}/>
         </View>
     );
 }
